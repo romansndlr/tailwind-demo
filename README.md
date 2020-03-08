@@ -1,68 +1,163 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Add tailwind as a postcss plugin
 
-## Available Scripts
+```javascript
+const { override, addPostcssPlugins } = require("customize-cra")
 
-In the project directory, you can run:
+module.exports = override(addPostcssPlugins([require("tailwindcss")]))
+```
 
-### `yarn start`
+Icon component for check mark
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+```javascript
+import React from "react"
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+export default function Check() {
+  return (
+    <svg
+      className="text-green-500 w-5 h-5 flex-shrink-0"
+      viewBox="0 0 20 20"
+      fill="currentColor"
+    >
+      <path
+        fillRule="evenodd"
+        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+        clipRule="evenodd"
+      />
+    </svg>
+  )
+}
+```
 
-### `yarn test`
+Final Pricing card
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```javascript
+import React from "react"
+import cx from "classnames"
+import Check from "./Check"
+import PropTypes from "prop-types"
 
-### `yarn build`
+PricingCard.propTypes = {
+  features: PropTypes.array.isRequired,
+  popular: PropTypes.bool,
+  price: PropTypes.number,
+  title: PropTypes.string.isRequired
+}
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+function PricingCard({
+  popular = false,
+  features = [],
+  title = "",
+  price = 0
+}) {
+  return (
+    <div
+      className={cx(
+        "flex flex-col bg-white rounded-lg shadow-lg w-full relative",
+        {
+          "border-2 border-indigo-600 z-10": popular
+        }
+      )}
+    >
+      {popular && (
+        <div className="flex justify-center -mt-3">
+          <span className="bg-indigo-600 rounded-full text-indigo-100 px-4 uppercase text-xs h-6 leading-6">
+            Most Popular
+          </span>
+        </div>
+      )}
+      <div className="p-8 flex flex-col items-center justify-center">
+        <h3 className="text-gray-900 font-semibold text-2xl">{title}</h3>
+        <p className="flex mt-2">
+          <span className="self-start text-gray-900 text-2xl">$</span>
+          <span className="font-bold text-6xl text-gray-900 leading-none ml-1">
+            {price}
+          </span>
+          <span className="self-center text-gray-500 text-xl ml-2">/month</span>
+        </p>
+      </div>
+      <div className="p-8 bg-gray-100 border-gray-200 border-t rounded-b-lg">
+        <ul>
+          {features.map(feature => (
+            <li
+              className="text-gray-600 mt-3 text-sm flex items-center"
+              key={feature}
+            >
+              <Check />
+              <span className="ml-2 truncate">{feature}</span>
+            </li>
+          ))}
+        </ul>
+        <button
+          className={cx("btn", {
+            "btn-primary": popular,
+            "btn-default": !popular
+          })}
+        >
+          Start your trial
+        </button>
+      </div>
+    </div>
+  )
+}
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+export default PricingCard
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Final App.js
 
-### `yarn eject`
+```javascript
+import React from "react"
+import { PricingCard } from "./components"
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+const features = [
+  "Est superbus guttus, cesaris.",
+  "Sunt compateres amor dexter, magnum historiaes.",
+  "Cum finis persuadere, omnes urbses visum lotus, castus musaes.",
+  "Cum imber ire, omnes guttuses visum primus, dexter classises.",
+  "Altus nutrix unus transferres fluctus est."
+]
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+function App() {
+  return (
+    <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+      <div className="container justify-center items-center p-6 flex flex-col lg:flex-row">
+        <div className="w-full order-2 mt-6 lg:order-1 lg:w-1/4 lg:-mr-2 lg:mt-0">
+          <PricingCard
+            title="Hobby"
+            price={79}
+            features={features.slice(0, 3)}
+          />
+        </div>
+        <div className="w-full order-1 lg:order-2 lg:w-1/3">
+          <PricingCard title="Growth" price={149} popular features={features} />
+        </div>
+        <div className="mt-6 w-full order-3 lg:w-1/4 lg:-ml-2">
+          <PricingCard
+            title="Scale"
+            price={349}
+            features={features.slice(0, 3)}
+          />
+        </div>
+      </div>
+    </div>
+  )
+}
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+export default App
+```
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+Extract button component
 
-## Learn More
+```css
+.btn {
+  @apply mt-8 text-lg text-center w-full p-2 rounded-md shadow-md h-12;
+}
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+.btn-default {
+  @apply text-indigo-600 bg-white;
+}
 
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `yarn build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+.btn-primary {
+  @apply bg-indigo-600 text-indigo-100;
+}
+```
