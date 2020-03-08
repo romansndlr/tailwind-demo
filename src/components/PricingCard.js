@@ -10,28 +10,18 @@ PricingCard.propTypes = {
   title: PropTypes.string.isRequired
 }
 
-function PricingCard({
-  popular = false,
-  features = [],
-  title = "",
-  price = 0
-}) {
+function PricingCard({ features = [], title = "", price = 0 }) {
   return (
     <div
       className={cx(
-        "flex flex-col bg-white rounded-lg shadow-lg w-full relative",
-        {
-          "border-2 border-indigo-600 z-10": popular
-        }
+        "flex flex-col bg-white rounded-lg shadow-lg w-full relative border-2 border-transparent cursor-pointer hover:border-indigo-600 hover:z-10 group"
       )}
     >
-      {popular && (
-        <div className="flex justify-center -mt-3">
-          <span className="bg-indigo-600 rounded-full text-indigo-100 px-4 uppercase text-xs h-6 leading-6">
-            Most Popular
-          </span>
-        </div>
-      )}
+      <div className="hidden group-hover:flex justify-center absolute inset-x-0 -mt-3">
+        <span className="bg-indigo-600 rounded-full text-indigo-100 px-4 uppercase text-xs h-6 leading-6">
+          Most Popular
+        </span>
+      </div>
       <div className="p-8 flex flex-col items-center justify-center">
         <h3 className="text-gray-900 font-semibold text-2xl">{title}</h3>
         <p className="flex mt-2">
@@ -54,12 +44,7 @@ function PricingCard({
             </li>
           ))}
         </ul>
-        <button
-          className={cx("btn", {
-            "btn-primary": popular,
-            "btn-default": !popular
-          })}
-        >
+        <button className="btn group-hover:btn-primary btn-default">
           Start your trial
         </button>
       </div>
