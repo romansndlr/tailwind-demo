@@ -32,63 +32,54 @@ Final Pricing card
 
 ```javascript
 import React from "react"
-import cx from "classnames"
-import Check from "./Check"
 import PropTypes from "prop-types"
+import Check from "./Check"
+import classNames from "classnames"
 
 PricingCard.propTypes = {
-  features: PropTypes.array.isRequired,
+  features: PropTypes.arrayOf(PropTypes.string).isRequired,
   popular: PropTypes.bool,
   price: PropTypes.number,
   title: PropTypes.string.isRequired
 }
 
-function PricingCard({
-  popular = false,
-  features = [],
-  title = "",
-  price = 0
-}) {
+function PricingCard({ features = [], popular = false, title, price = 0 }) {
   return (
     <div
-      className={cx(
-        "flex flex-col bg-white rounded-lg shadow-lg w-full relative",
-        {
-          "border-2 border-indigo-600 z-10": popular
-        }
-      )}
+      className={classNames("bg-white rounded-lg shadow-lg relative", {
+        "border-2 border-indigo-600": popular
+      })}
     >
       {popular && (
-        <div className="flex justify-center -mt-3">
-          <span className="bg-indigo-600 rounded-full text-indigo-100 px-4 uppercase text-xs h-6 leading-6">
+        <div className="absolute inset-x-0 flex justify-center -mt-3">
+          <span className="bg-indigo-600 rounded-full px-3 text-indigo-100 text-xs leading-6 uppercase tracking-wider">
             Most Popular
           </span>
         </div>
       )}
-      <div className="p-8 flex flex-col items-center justify-center">
-        <h3 className="text-gray-900 font-semibold text-2xl">{title}</h3>
-        <p className="flex mt-2">
-          <span className="self-start text-gray-900 text-2xl">$</span>
-          <span className="font-bold text-6xl text-gray-900 leading-none ml-1">
+      <div className="p-8 flex flex-col justify-center items-center">
+        <h3 className="text-2xl font-semibold">{title}</h3>
+        <p className="flex items-center">
+          <span className="text-2xl self-start mr-1 text-gray-900">$</span>
+          <span className="text-5xl font-bold leading-none text-gray-900">
             {price}
           </span>
-          <span className="self-center text-gray-500 text-xl ml-2">/month</span>
+          <span className="text-gray-500 ml-1">/month</span>
         </p>
       </div>
-      <div className="p-8 bg-gray-100 border-gray-200 border-t rounded-b-lg">
+      <div className="p-8 bg-gray-100 border-t border-gray-200 rounded-b-lg">
         <ul>
           {features.map(feature => (
-            <li
-              className="text-gray-600 mt-3 text-sm flex items-center"
-              key={feature}
-            >
+            <li className="flex items-center mt-3" key={feature}>
               <Check />
-              <span className="ml-2 truncate">{feature}</span>
+              <span className="ml-2 truncate text-gray-600 text-sm">
+                {feature}
+              </span>
             </li>
           ))}
         </ul>
         <button
-          className={cx("btn", {
+          className={classNames("btn", {
             "btn-primary": popular,
             "btn-default": !popular
           })}
@@ -107,35 +98,33 @@ Final App.js
 
 ```javascript
 import React from "react"
-import { PricingCard } from "./components"
-
-const features = [
-  "Est superbus guttus, cesaris.",
-  "Sunt compateres amor dexter, magnum historiaes.",
-  "Cum finis persuadere, omnes urbses visum lotus, castus musaes.",
-  "Cum imber ire, omnes guttuses visum primus, dexter classises.",
-  "Altus nutrix unus transferres fluctus est."
-]
+import PricingCard from "./PricingCard"
+import faker from "faker"
 
 function App() {
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center">
-      <div className="container justify-center items-center p-6 flex flex-col lg:flex-row">
-        <div className="w-full order-2 mt-6 lg:order-1 lg:w-1/4 lg:-mr-2 lg:mt-0">
+    <div className="bg-gray-200 min-h-screen p-6 flex">
+      <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-center container mx-auto flex-1">
+        <div className="lg:w-1/4 lg:-mr-2 mt-6 order-2 lg:order-1">
           <PricingCard
             title="Hobby"
             price={79}
-            features={features.slice(0, 3)}
+            features={Array.from({ length: 3 }, () => faker.lorem.sentence())}
           />
         </div>
-        <div className="w-full order-1 lg:order-2 lg:w-1/3">
-          <PricingCard title="Growth" price={149} popular features={features} />
+        <div className="lg:w-1/3 z-10 order-1 lg:order-2">
+          <PricingCard
+            title="Growth"
+            price={149}
+            popular
+            features={Array.from({ length: 5 }, () => faker.lorem.sentence())}
+          />
         </div>
-        <div className="mt-6 w-full order-3 lg:w-1/4 lg:-ml-2">
+        <div className="lg:w-1/4 lg:-ml-2 mt-6 order-3">
           <PricingCard
             title="Scale"
             price={349}
-            features={features.slice(0, 3)}
+            features={Array.from({ length: 3 }, () => faker.lorem.sentence())}
           />
         </div>
       </div>
@@ -150,14 +139,14 @@ Extract button component
 
 ```css
 .btn {
-  @apply mt-8 text-lg text-center w-full p-2 rounded-md shadow-md h-12;
+  @apply mt-8 w-full py-3 rounded-lg shadow;
 }
 
 .btn-default {
-  @apply text-indigo-600 bg-white;
+  @apply bg-white text-indigo-600;
 }
 
 .btn-primary {
-  @apply bg-indigo-600 text-indigo-100;
+  @apply bg-indigo-600 text-white;
 }
 ```
