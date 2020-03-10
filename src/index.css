@@ -3,3 +3,15 @@
 @tailwind components;
 
 @tailwind utilities;
+
+.btn {
+  @apply mt-8 w-full py-3 rounded-lg shadow;
+}
+
+.btn-default {
+  @apply bg-white text-indigo-600;
+}
+
+.btn-primary {
+  @apply bg-indigo-600 text-white;
+}

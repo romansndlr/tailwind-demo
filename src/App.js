@@ -1,25 +1,33 @@
 import React from "react"
+import PricingCard from "./PricingCard"
+import faker from "faker"
 
 function App() {
   return (
-    <div>
-      <div>
-        <h3>Growth</h3>
-        <p>
-          <span>$</span>
-          <span>149</span>
-          <span>/month</span>
-        </p>
-      </div>
-      <div>
-        <ul>
-          <li>Sunt capioes pugna mirabilis, festus lixaes.</li>
-          <li>Sunt capioes pugna mirabilis, festus lixaes.</li>
-          <li>Sunt capioes pugna mirabilis, festus lixaes.</li>
-          <li>Sunt capioes pugna mirabilis, festus lixaes.</li>
-          <li>Sunt capioes pugna mirabilis, festus lixaes.</li>
-        </ul>
-        <button>Start your trial</button>
+    <div className="bg-gray-200 min-h-screen p-6 flex">
+      <div className="flex items-center justify-center container mx-auto flex-1">
+        <div className="w-1/4">
+          <PricingCard
+            title="Hobby"
+            price={79}
+            features={Array.from({ length: 3 }, () => faker.lorem.sentence())}
+          />
+        </div>
+        <div className="w-1/3">
+          <PricingCard
+            title="Growth"
+            price={149}
+            popular
+            features={Array.from({ length: 5 }, () => faker.lorem.sentence())}
+          />
+        </div>
+        <div className="w-1/4">
+          <PricingCard
+            title="Scale"
+            price={349}
+            features={Array.from({ length: 3 }, () => faker.lorem.sentence())}
+          />
+        </div>
       </div>
     </div>
   )
